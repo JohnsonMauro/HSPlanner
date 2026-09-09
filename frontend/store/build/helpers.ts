@@ -9,6 +9,8 @@ import {
 import { pruneUnknownIds } from '../../utils/build/seasonMigration'
 import type { AttrMap, BuildState } from './types'
 
+export const DEFAULT_DIFFICULTY = gameConfig.difficulties?.[0]?.id ?? 'normal'
+
 export function emptyAllocation(): AttrMap {
   return gameConfig.attributes.reduce<AttrMap>((acc, a) => {
     acc[a.key] = 0
@@ -27,6 +29,7 @@ export function snapshotPatch(rawSnap: BuildSnapshot) {
   return {
     classId: snap.classId,
     level: snap.level,
+    difficulty: snap.difficulty ?? DEFAULT_DIFFICULTY,
     allocated: snap.allocated,
     inventory: snap.inventory,
     skillRanks: snap.skillRanks,
@@ -44,6 +47,7 @@ export function snapshotPatch(rawSnap: BuildSnapshot) {
     disabledPotions: snap.disabledPotions ?? {},
     killsPerSec: snap.killsPerSec,
     entityRates: entityRatesFrom(snap.entityRates, snap.entityAttacksPerSecond),
+    stackCounts: snap.stackCounts ?? {},
     customStats: snap.customStats ?? [],
     allocatedEtherNodes: snap.allocatedEtherNodes ?? new Set<number>(),
     mercClassId: snap.mercClassId ?? null,
